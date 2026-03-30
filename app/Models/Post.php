@@ -2,30 +2,33 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Post extends Model
 {
-    //
+    use HasFactory;
+
     protected $fillable = [
+        'category_id',
         'title',
         'slug',
-        'category_id',
         'color',
         'image',
-        'body',
+        'content',
+        'is_published', // Pastikan namanya is_published
         'tags',
-        'published',
         'published_at',
     ];
 
     protected $casts = [
         'tags' => 'array',
-        'published' => 'boolean',
-        'published_at' => 'date',
+        'is_published' => 'boolean',
+        'published_at' => 'datetime',
     ];
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }

@@ -16,37 +16,41 @@ use Filament\Tables\Columns\TextColumn;
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     public static function form(Form $form): Form
-{
-    return $form
-        ->schema([
-            TextInput::make('name')
-                ->required()
-                ->live(onBlur: true)
-                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-            
-            TextInput::make('slug')
-                ->required()
-                // Tugas no 2: Tambahkan validasi unik
-                ->unique(ignoreRecord: true) 
-                ->readOnly(),
-        ]);
-}
+    {
+        // Form untuk membuat category baru (PHP, Laravel, dll)
+        return $form
+            ->schema([
+                \Filament\Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', \Illuminate\Support\Str::slug($state))),
+                \Filament\Forms\Components\TextInput::make('slug')
+                    ->required()
+                    ->unique(Category::class, 'slug', ignoreRecord: true),
+            ]);
+    }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('slug'),
-                TextColumn::make('created_at')->dateTime()->sortable(),
+                TextColumn::make('name')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('slug')
+                    ->sortable(),
+            ])
+            ->filters([
+                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
