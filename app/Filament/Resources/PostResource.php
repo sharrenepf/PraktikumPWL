@@ -8,9 +8,10 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-// Import class konfigurasi tabel Anda
-use App\Filament\Admin\Resources\Posts\Tables\PostsTable;
+// Pastikan namespace ini sesuai dengan lokasi file yang baru saja dibuat di terminal
+use App\Filament\Resources\PostResource\RelationManagers\TagsRelationManager;
 use App\Filament\Resources\Schemas\PostForm;
+use App\Filament\Admin\Resources\Posts\Tables\PostsTable;
 
 class PostResource extends Resource
 {
@@ -24,8 +25,15 @@ class PostResource extends Resource
 
     public static function table(Table $table): Table
     {
-        // Panggil class PostsTable agar perubahan di file tersebut langsung aktif
         return PostsTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            // Perbaikan sintaksis: pastikan tidak ada spasi sebelum double colon
+            TagsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
